@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -12,4 +6,85 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(cuid())
+  email             String        @unique
+  universityId      String        @unique
+  name              String
+  password          String
+
+  cart              Cart?
+  orders            Order[]
+}
+
+
+enum Category {
+  north_indian
+  chinese
+  beverages
+  ice_cream
+  other
+}
+
+model MenuItem {
+  id              String            @id @default(cuid())
+  title           String            @unique
+  price           Float
+  image           String
+  category        Category
+
+  cartItems       CartItem[]
+}
+
+
+model Cart {
+  id              String            @id @default(cuid())
+
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String            @unique
+
+  items           CartItem[]
+}
+
+model CartItem {
+  id              String            @id @default(cuid())
+  quantity        Int               @default(1)
+
+  cart            Cart              @relation(fields: [cartId], references: [id])
+  cartId          String
+
+  menuItem        MenuItem          @relation(fields: [menuItemId], references: [id])
+  menuItemId      String
+
+  @@unique([cartId, menuItemId])
+}
+
+enum OrderStatus {
+  PENDING
+  CANCELLED
+  COMPLETED
+}
+
+model Order {
+  id              String            @id @default(cuid())
+  totalPrice      Float           
+  status          OrderStatus       @default(PENDING)
+  createdAt       DateTime          @default(now())
+
+  user            User              @relation(fields: [userId], references: [id])
+  userId          String
+
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id              String            @id @default(cuid())
+  title           String
+  price           Float
+  quantity        Int
+
+  order           Order             @relation(fields: [orderId], references: [id])
+  orderId         String
 }

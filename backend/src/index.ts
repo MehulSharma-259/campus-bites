@@ -15,6 +15,3 @@ app.use('/api/v1/content', contentRoutes)
 
 
 app.listen(port, () => console.log(`Server started at ${port}`))
-
-
-
