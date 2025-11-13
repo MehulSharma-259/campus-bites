@@ -1,8 +1,12 @@
 /**
  * Handles all API calls related to user authentication (signin, signup).
+ *
+ * @format
  */
-import { API_BASE_URL } from "../constants";
-import { AuthResponse, ApiError, User } from "../types";
+
+import axios, {isAxiosError} from "axios";
+import {API_BASE_URL} from "../constants";
+import {AuthResponse, ApiError} from "../types";
 
 type SignInCredentials = {
   universityId: string;
@@ -22,35 +26,37 @@ export const authService = {
    * Throws an error with the backend message on failure.
    */
   signIn: async (credentials: SignInCredentials): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
-
-    const data: AuthResponse | ApiError = await response.json();
-
-    if (!response.ok) {
-      throw new Error((data as ApiError).message || "Failed to sign in");
+    try {
+      const response = await axios.post<AuthResponse>(
+        `${API_BASE_URL}/auth/signin`,
+        credentials
+      );
+      return response.data;
+    } catch (error: any) {
+      if (isAxiosError(error) && error.response?.data) {
+        const ApiError = error.response.data as ApiError;
+        throw new Error(ApiError.message || "failed to sign in");
+      }
+      throw new Error("an unknown error occurred during signin");
     }
-    return data as AuthResponse;
   },
 
   /**
    * Attempts to sign up a new user.
    */
   signUp: async (userData: SignUpData): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    const data: AuthResponse | ApiError = await response.json();
-
-    if (!response.ok) {
-      throw new Error((data as ApiError).message || "Failed to sign up");
+    try {
+      const response = await axios.post<AuthResponse>(
+        `${API_BASE_URL}/auth/signup`,
+        userData
+      );
+      return response.data
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+          const apiError = error.response.data as ApiError;
+          throw new Error(apiError.message || "Failed to sign up");
+        }
+        throw new Error("An unknown error occurred during sign up");
     }
-    return data as AuthResponse;
-  },
+  }
 };
