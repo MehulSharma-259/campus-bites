@@ -13,7 +13,7 @@ export function Profile() {
 
   const handleLogout = () => {
     logout(); // This clears the user and token from context and localStorage
-    navigate("/signin"); // Redirect to signin page
+    navigate("/signin", {replace: true}); // Redirect to signin page
   };
 
   // Fallback while user data is loading or if page is accessed without login
@@ -57,13 +57,13 @@ export function Profile() {
         {/* --- Navigation Section --- */}
         <div className="flex flex-col gap-4 mb-8">
           <Link
-            to="/cart"
+            to={user ? "/cart" : "/signin"} 
             className="bg-[#575757b7] p-4 rounded-lg text-center font-medium hover:bg-[#6b6b6bb7] transition-colors"
           >
             My Cart
           </Link>
           <Link
-            to="/orders" // Assuming you will create an /orders route
+            to={user ? "/orders" : "/signin"}
             className="bg-[#575757b7] p-4 rounded-lg text-center font-medium hover:bg-[#6b6b6bb7] transition-colors"
           >
             My Previous Orders
@@ -73,7 +73,7 @@ export function Profile() {
         {/* --- Logout Button --- */}
         <button
           onClick={handleLogout}
-          className="bg-[#FF4461] py-3 rounded-lg hover:bg-[#e03a55] transition-colors w-full font-bold text-lg"
+          className="bg-[#FF4461] py-3 rounded-lg hover:cursor-pointer hover:bg-[#e03a55] transition-colors w-full font-bold text-lg"
         >
           Log Out
         </button>

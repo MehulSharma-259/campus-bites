@@ -119,14 +119,15 @@ export function Home() {
             </div>
 
             <div className="flex items-center justify-center gap-5">
-              <NavLink to="/cart">
+              <NavLink 
+              to={user ? "/cart" : "/signin"} 
+              >
                 <CartIcon />
               </NavLink>
 
               <NavLink
                 className={"flex gap-2 justify-center items-center"}
                 to={user ? "/profile" : "/signin"} // Change link based on auth
-                replace
               >
                 <Profile />
                 {/* Show user's name or "Sign In" */}

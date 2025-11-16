@@ -1,35 +1,52 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyTokenUser } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
+import prisma from "../lib/prisma.js";
 
 export interface AuthRequest extends Request {
-  userId?: string
+  user?: {
+    id: string,
+    email: string,
+    universityId: string
+  }
 }
 
-export function authMiddleware(req: AuthRequest , res: Response, next: NextFunction) {
+export async function authMiddleware(req: AuthRequest , res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
-  if(!authHeader || !authHeader.startsWith("Bearer")) {
-    return res.status(401).json({
+  if(!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({
       message: "unauthorized: no token provided"
     })
+    return;
   }
 
   const token = authHeader.split(" ")[1];
   if(!token) {
-    return res.status(401).json({
+    res.status(401).json({
       message: "unauthorized"
     })
+    return;
   }
   
   try {
-    const data = verifyTokenUser(token) as jwt.JwtPayload;
-    req.userId = data.userId;
+    const payload = verifyTokenUser(token) as jwt.JwtPayload;
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+      select: { id: true, email: true, universityId: true }
+    })
+
+    if(!user) {
+      res.status(401).json({message: "unauthorized: user not found"})
+      return;
+    }
+    req.user = user;
     next()
   } catch(err: any){
-    return res.status(403).json({
+    res.status(403).json({
       message: "invalid token"
     })
+    return;
   }
 
 }

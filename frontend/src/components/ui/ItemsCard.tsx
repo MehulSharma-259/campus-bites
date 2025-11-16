@@ -1,5 +1,7 @@
 /* @format */
 
+import { useNavigate } from "react-router";
+import { useAuth } from "../../hooks/useAuth";
 import { useCart } from "../../hooks/useCart"; // Import the hook
 import { MenuItem } from "../../types"; // Import the type
 
@@ -9,23 +11,35 @@ interface CardProps {
 
 export function ItemCard({ item }: CardProps) {
   const { getItemQuantity, addToCart, updateQuantity, setPopUp } = useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate()
   
   // Get the quantity for *this specific item* from the global context
   const quantity = getItemQuantity(item.id);
 
   const increment = () => {
-    setPopUp(true);
-    if (quantity === 0) {
-      addToCart(item); // This adds it with quantity 1
+
+    if(!isAuthenticated) {
+      navigate("/signin")
     } else {
-      updateQuantity(item.id, quantity + 1);
+      setPopUp(true);
+      if (quantity === 0) {
+        addToCart(item); // This adds it with quantity 1
+      } else {
+        updateQuantity(item.id, quantity + 1);
+      }
     }
+    
   };
   
   const decrement = () => {
-    setPopUp(true);
-    // The updateQuantity function in the context will handle removal if q <= 0
-    updateQuantity(item.id, quantity - 1);
+    if(!isAuthenticated) {
+      navigate("signin")
+    } else {
+      setPopUp(true);
+      // The updateQuantity function in the context will handle removal if q <= 0
+      updateQuantity(item.id, quantity - 1);
+    }
   };
 
   return (
@@ -46,7 +60,7 @@ export function ItemCard({ item }: CardProps) {
       <div className="flex justify-center items-center font-semibold text-lg text-white bg-red-500 ml-auto rounded-lg shadow-md overflow-hidden translate-y-[26px]">
         
         <button
-          className="cursor-pointer p-2 w-5 text-xl hover:bg-red-600 transition-colors"
+          className="cursor-pointer p-2 w-5 text-xl hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={increment}
         >
           +
