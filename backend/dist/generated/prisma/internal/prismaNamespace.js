@@ -119,6 +119,7 @@ export const OrderItemScalarFieldEnum = {
     title: 'title',
     price: 'price',
     quantity: 'quantity',
+    image: 'image',
     orderId: 'orderId'
 };
 export const SortOrder = {
@@ -128,6 +129,10 @@ export const SortOrder = {
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive'
+};
+export const NullsOrder = {
+    first: 'first',
+    last: 'last'
 };
 export const defineExtension = runtime.Extensions.defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map

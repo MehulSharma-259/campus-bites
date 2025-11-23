@@ -6,6 +6,30 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+router.get('/', async (req: AuthRequest, res) => {
+  try {
+    const userId = req.user!.id;
+    
+    const orders = await prisma.order.findMany({
+      where: {userId},
+      include: {
+        items: true
+      },
+      orderBy: {
+        createdAt: "desc"
+      }
+    })
+
+    return res.json(orders);
+
+  } catch (error: any) {
+    console.error("Error fetching orders: ", error)
+    res.status(500).json({
+      message: "failed to fetch orders"
+    })
+  }
+})
+
 router.post('/place-order', async (req: AuthRequest, res) => {
   try {
     const userId = req.user!.id;
@@ -39,7 +63,8 @@ router.post('/place-order', async (req: AuthRequest, res) => {
             create: cart.items.map((items) => ({
               title: items.menuItem.title,
               price: items.menuItem.price,
-              quantity: items.quantity
+              quantity: items.quantity,
+              image: items.menuItem.image
             }))
           }
         }

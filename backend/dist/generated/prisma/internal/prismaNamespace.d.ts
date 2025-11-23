@@ -794,6 +794,7 @@ export declare const OrderItemScalarFieldEnum: {
     readonly title: "title";
     readonly price: "price";
     readonly quantity: "quantity";
+    readonly image: "image";
     readonly orderId: "orderId";
 };
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum];
@@ -807,6 +808,11 @@ export declare const QueryMode: {
     readonly insensitive: "insensitive";
 };
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode];
+export declare const NullsOrder: {
+    readonly first: "first";
+    readonly last: "last";
+};
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
 /**
  * Field references
  */

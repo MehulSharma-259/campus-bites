@@ -91,6 +91,7 @@ export const OrderItemScalarFieldEnum = {
     title: 'title',
     price: 'price',
     quantity: 'quantity',
+    image: 'image',
     orderId: 'orderId'
 };
 export const SortOrder = {
@@ -100,5 +101,9 @@ export const SortOrder = {
 export const QueryMode = {
     default: 'default',
     insensitive: 'insensitive'
+};
+export const NullsOrder = {
+    first: 'first',
+    last: 'last'
 };
 //# sourceMappingURL=prismaNamespaceBrowser.js.map

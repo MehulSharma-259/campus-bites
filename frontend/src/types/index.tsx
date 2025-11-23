@@ -23,7 +23,7 @@ export interface ApiError {
 
 // Represents a single item on the menu
 export interface MenuItem {
-  id: string; // Using ID instead of title as a unique identifier
+  id: string; 
   title: string;
   price: number;
   image: string;
@@ -33,4 +33,20 @@ export interface MenuItem {
 // Represents an item that has been added to the cart
 export interface CartItem extends MenuItem {
   quantity: number;
+}
+
+export interface OrderItem {
+  id: string;
+  title: string;
+  price: number;
+  quantity: number;
+  images?: string;
+}
+
+export interface Order {
+  id: string;
+  totalPrice: number;
+  status: "PENDING" | "CANCELLED" | "COMPLETED";
+  createdAt: string;
+  items: OrderItem[];
 }
