@@ -24,61 +24,64 @@ export function Orders() {
         setLoading(false);
       }
     };
+
     fetchOrders();
   }, [token]);
 
-  if (loading) return <div className="h-screen flex justify-center items-center text-gray-800">Loading...</div>;
-  if (error) return <div className="h-screen flex justify-center items-center text-red-500">{error}</div>;
+  if (loading) return <div className="h-screen flex justify-center items-center text-gray-800 font-bold">Loading...</div>;
+  if (error) return <div className="h-screen flex justify-center items-center text-red-500 font-bold">{error}</div>;
 
   return (
-    <div className="min-h-screen custom-bg-image p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen p-4 md:p-8 pt-10">
+      <div className="max-w-4xl mx-auto mt-10">
         
-        {/* Simplified Header: Removed Back to Profile button */}
-        <header className="flex justify-center items-center mb-8 bg-white/20 backdrop-blur-md p-6 rounded-xl shadow-lg">
-          <h1 className="text-4xl font-bold text-gray-800">My Orders</h1>
+        {/* Simplified Header */}
+        <header className="flex justify-center items-center mb-10 bg-white/20 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/30">
+          <h1 className="text-4xl font-black text-gray-800 tracking-tight">My Orders</h1>
         </header>
 
         {orders.length === 0 ? (
-          <div className="bg-white/70 backdrop-blur-md p-8 rounded-lg text-center shadow-lg text-gray-800">
-            <p className="text-xl">No orders found.</p>
-            <Link to="/" className="text-[#FF4461] mt-4 inline-block font-bold hover:underline">
+          <div className="bg-white/70 backdrop-blur-md p-10 rounded-2xl text-center shadow-lg text-gray-800">
+            <p className="text-xl font-medium">No orders found.</p>
+            <Link to="/" className="text-[#FF4461] mt-4 inline-block font-black hover:underline transition-all">
               Order something delicious!
             </Link>
           </div>
         ) : (
           <div className="space-y-6">
             {orders.map((order) => (
-              <div key={order.id} className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-gray-200 text-gray-800">
-                <div className="flex justify-between items-start pb-4 border-b border-gray-300 mb-4">
+              <div key={order.id} className="bg-white/80 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/40 text-gray-800 transition-transform hover:scale-[1.01]">
+                
+                <div className="flex justify-between items-start pb-4 border-b border-gray-200 mb-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-500">
-                      Order ID: <span className="font-mono text-xs">{order.id.substring(0, 15)}...</span>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                      Order ID
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="font-mono text-xs text-gray-600">{order.id.substring(0, 18)}...</p>
+                    <p className="text-xs text-gray-500 mt-2 font-semibold">
                       {new Date(order.createdAt).toLocaleString()}
                     </p>
                   </div>
                   
                   <div className="text-right">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                    <span className={`px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
                       order.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : 
                       order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
                     }`}>
                       {order.status}
                     </span>
-                    <p className="font-extrabold text-2xl text-[#FF4461] mt-1">₹{order.totalPrice}</p>
+                    <p className="font-black text-3xl text-[#FF4461] mt-2">₹{order.totalPrice}</p>
                   </div>
                 </div>
 
-                <h3 className="font-semibold text-lg mb-2">Items Ordered:</h3>
-                <div className="space-y-2">
+                <h3 className="font-bold text-sm uppercase tracking-wider text-gray-500 mb-3">Items Ordered</h3>
+                <div className="space-y-3">
                   {order.items.map((item) => (
-                    <div key={item.id} className="flex justify-between text-base border-l-4 border-gray-400 pl-4 py-1">
-                      <span className="font-medium">
-                        {item.quantity}x {item.title}
+                    <div key={item.id} className="flex justify-between text-base bg-black/5 p-3 rounded-xl border border-black/5">
+                      <span className="font-bold text-gray-700">
+                        {item.quantity}x <span className="text-gray-900">{item.title}</span>
                       </span>
-                      <span className="text-gray-600 font-semibold">₹{item.price * item.quantity}</span>
+                      <span className="text-gray-900 font-black">₹{item.price * item.quantity}</span>
                     </div>
                   ))}
                 </div>

@@ -9,46 +9,47 @@ export function Navbar() {
   const { user } = useAuth();
 
   return (
-    // Changed: bg-white/10 to bg-transparent, increased blur, and added a subtle border
-    <nav className="w-full px-6 md:px-10 py-4 bg-transparent backdrop-blur-lg border-b border-white/20 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Logo */}
-        <div className="text-2xl font-bold">
-          <NavLink to="/" className="text-gray-900 hover:text-[#FF4461] transition-colors">
-            CampusBites
+    <nav className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4 pointer-events-none">
+      <div className="max-w-7xl mx-auto px-6 py-3 rounded-2xl bg-black/5 backdrop-blur-xl border border-white/10 shadow-sm flex justify-between items-center pointer-events-auto transition-all duration-300 ease-in-out hover:shadow-md hover:bg-black/10">
+        
+        {/* Logo with slight scale on hover */}
+        <div className="text-2xl font-extrabold tracking-tight transition-transform duration-200 active:scale-95">
+          <NavLink to="/" className="text-gray-900 group">
+            Campus<span className="text-[#FF4461] group-hover:text-red-600 transition-colors">Bites</span>
           </NavLink>
         </div>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex gap-12 justify-between items-center text-gray-800">
-          <NavLink to="/" className="hover:text-[#FF4461] transition-colors font-semibold">
-            Menu
-          </NavLink>
-          <NavLink to="/" className="hover:text-[#FF4461] transition-colors font-semibold">
-            About
-          </NavLink>
-          <NavLink to="/" className="hover:text-[#FF4461] transition-colors font-semibold">
-            Contact
-          </NavLink>
+        {/* Links with underlined hover animation */}
+        <div className="hidden md:flex gap-10 items-center">
+          {['Menu', 'About', 'Contact'].map((item) => (
+            <NavLink 
+              key={item}
+              to="/" 
+              className="relative text-sm font-semibold uppercase tracking-wider text-gray-700 hover:text-black transition-colors group"
+            >
+              {item}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#FF4461] transition-all duration-300 group-hover:w-full"></span>
+            </NavLink>
+          ))}
         </div>
 
-        {/* Action Icons */}
-        <div className="flex items-center justify-center gap-6">
+        {/* Action Icons with smooth scaling */}
+        <div className="flex items-center gap-5">
           <NavLink 
             to={user ? "/cart" : "/signin"} 
-            className="hover:scale-110 transition-transform text-gray-800 hover:text-[#FF4461]"
+            className="p-2 rounded-full hover:bg-[#FF4461]/10 transition-all duration-200 active:scale-90 text-gray-800 hover:text-[#FF4461]"
           >
             <CartIcon />
           </NavLink>
 
           <NavLink
-            className="flex gap-2 justify-center items-center group"
             to={user ? "/profile" : "/signin"}
+            className="flex items-center gap-3 pl-4 border-l border-black/10 group transition-all duration-200 active:scale-95"
           >
-            <div className="group-hover:scale-110 transition-transform text-gray-800 group-hover:text-[#FF4461]">
+            <div className="p-1 rounded-full border-2 border-transparent group-hover:border-[#FF4461] transition-all duration-300">
               <Profile />
             </div>
-            <span className="font-bold text-gray-900 hidden sm:block">
+            <span className="font-bold text-gray-800 hidden sm:block group-hover:text-[#FF4461] transition-colors">
               {user ? user.name?.split(" ")[0] : "Sign In"}
             </span>
           </NavLink>
