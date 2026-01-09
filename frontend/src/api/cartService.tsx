@@ -27,7 +27,9 @@ export interface BackendCart {
 
 export const flattenBackendCartItem = (cart: BackendCart) => {
   if (!cart || !cart.items) return [];
-  return cart.items.map((item) => ({
+  const sortedItems = [...cart.items]
+  sortedItems.sort((a, b) => a.id.localeCompare(b.id));
+  return sortedItems.map((item) => ({
     ...item.menuItem, // Spread all properties of menuItem
     quantity: item.quantity, // Add the quantity
   }));

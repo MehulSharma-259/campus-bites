@@ -1,4 +1,5 @@
 /** @format */
+//
 
 import {HeroCard} from "../components/ui/HeroCard";
 import {ItemCard} from "../components/ui/ItemsCard";
@@ -8,17 +9,19 @@ import {MenuItem} from "../types";
 import {PopUp} from "../components/ui/PopUp";
 
 const heroCardData = [
-  {title: "North Indian", image: "/images/foods/north indian.png"},
-  {title: "Chinese", image: "/images/foods/chineseFood.png"},
-  {title: "Ice Cream", image: "/images/foods/ice cream.png"},
-  {title: "Beverages", image: "/images/foods/beverages.png"},
+  {title: "North Indian", image: "/images/foods/north indian.png", targetId: "north-indian"},
+  {title: "Chinese", image: "/images/foods/chineseFood.png", targetId: "chinese"},
+  {title: "Ice Cream", image: "/images/foods/ice cream.png", targetId: "ice-cream"},
+  {title: "Beverages", image: "/images/foods/beverages.png", targetId: "beverages"},
 ];
 
-const MenuSection = ({title, items}: {title: string; items: MenuItem[]}) => {
+// Added 'id' prop to MenuSection
+const MenuSection = ({title, items, id}: {title: string; items: MenuItem[]; id: string}) => {
   if (items.length === 0) return null;
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4">
+    // Added 'scroll-mt-24' to prevent the fixed navbar from overlapping the title
+    <div id={id} className="flex flex-col justify-center items-center gap-4 scroll-mt-24">
       <h1 className="text-4xl font-bold ">{title}</h1>
       <div className="grid lg:grid-cols-2 gap-5 gap-x-15">
         {items.map((item) => (
@@ -50,23 +53,24 @@ export function Home() {
     fetchMenu();
   }, []);
 
-  const northIndianItems = menuItems.filter(
-    (item) => item.category === "north_indian"
-  );
+  // Smooth scroll function
+  const scrollToCategory = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const northIndianItems = menuItems.filter((item) => item.category === "north_indian");
   const chineseItems = menuItems.filter((item) => item.category === "chinese");
-  const iceCreamItems = menuItems.filter(
-    (item) => item.category === "ice_cream"
-  );
-  const beverageItems = menuItems.filter(
-    (item) => item.category === "beverages"
-  );
+  const iceCreamItems = menuItems.filter((item) => item.category === "ice_cream");
+  const beverageItems = menuItems.filter((item) => item.category === "beverages");
   const otherItems = menuItems.filter((item) => item.category === "other");
 
   return (
     <div className="custom-bg-image min-h-screen">
       <PopUp />
 
-      {/* Hero section */}
       <div className="flex flex-1 items-center justify-center px-20 py-10 mb-20">
         <div className="flex flex-1 flex-col justify-center items-start pl-10">
           <h1 className="text-6xl font-bold mb-6 leading-tight ">
@@ -83,22 +87,22 @@ export function Home() {
                 key={card.title}
                 title={card.title}
                 image={card.image}
+                onClick={() => scrollToCategory(card.targetId)} // Pass scroll handler
               />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Menu section */}
       <div className="flex flex-col gap-10 pb-20">
         {loading && <p className="text-center text-xl">Loading menu...</p>}
         {error && <p className="text-center text-xl text-red-500">{error}</p>}
 
-        <MenuSection title="North Indian" items={northIndianItems} />
-        <MenuSection title="Chinese" items={chineseItems} />
-        <MenuSection title="Ice Cream" items={iceCreamItems} />
-        <MenuSection title="Beverages" items={beverageItems} />
-        <MenuSection title="Others" items={otherItems} />
+        <MenuSection id="north-indian" title="North Indian" items={northIndianItems} />
+        <MenuSection id="chinese" title="Chinese" items={chineseItems} />
+        <MenuSection id="ice-cream" title="Ice Cream" items={iceCreamItems} />
+        <MenuSection id="beverages" title="Beverages" items={beverageItems} />
+        <MenuSection id="others" title="Others" items={otherItems} />
       </div>
     </div>
   );
